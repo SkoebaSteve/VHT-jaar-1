@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)http://shapeshed.com/examples/HTML5-video-element/ -->
+<html><script>(function installFakeGeolocationCode() {
+  var timerId = null;
+  if (!navigator.geolocation) {
+    return;
+  }
+  navigator.geolocation.getCurrentPosition_ = navigator.geolocation.getCurrentPosition;
+  navigator.geolocation.watchPosition_ = navigator.geolocation.watchPosition;
+  navigator.geolocation.clearWatch_ = navigator.geolocation.clearWatch;
+
+  navigator.geolocation.clearWatch = function (id) {
+    window.clearInterval(id);
+  };
+
+  function sendBackResponse (successCb, errorCb, options, jsonedResponse) {
+    var response = JSON.parse(jsonedResponse);
+    if (response.isEnabled) {
+      successCb({ 'coords': { 'latitude': response.lat, 'longitude': response.lng,
+        'accuracy': response.accuracy }, 'timestamp': new Date().getTime() });
+    } else {
+      navigator.geolocation.getCurrentPosition_(successCb, errorCb, options);
+    }
+  }
+
+  function createGetFakePosition(successCb, errorCb, options) {
+    return function () {
+      var positionElement = document.getElementById('fake_position_meta');
+      if (!positionElement) {
+        var interval = setInterval(function() {
+          positionElement = document.getElementById('fake_position_meta');
+          if (positionElement) {
+            clearInterval(interval);
+            sendBackResponse(successCb, errorCb, options, positionElement.getAttribute('content'));
+          }
+        }, 200 /* ms */);
+      } else {
+        // we already have the div, no need for intervals etc.
+        sendBackResponse(successCb, errorCb, options, positionElement.getAttribute('content'));
+      }
+    };
+  };
+
+  navigator.geolocation.getCurrentPosition = function (cb1, cb2, options) {
+    var getFakePosition = createGetFakePosition(cb1, cb2, options);
+    getFakePosition();
+  };
+
+  navigator.geolocation.watchPosition = function (cb1, cb2, options) {
+    var getFakePosition = createGetFakePosition(cb1, cb2, options);
+    getFakePosition();
+    if (timerId) {
+      window.clearInterval(timerId);
+    }
+    timerId = window.setInterval(getFakePosition, 5 * 1000);
+    return timerId;
+  };
+})();</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+	<title>HTML5 Video Demo</title>
+	<style type="text/css" media="screen">@import "css/application-1a54a2c13d2cf4369a9ddf4545537cd3.css";</style>
+<style type="text/css"></style></head>
+<body>
+	<div id="wrapper">
+			<h1>HTML 5 - Video Demo</h1>
+		<div id="content">
+			<p>You need either Firefox 3.5, Safari 3, 4, Opera, Webkit Nightly to view this page.</p>
+			<div id="firefox">
+				<h3>Firefox 3.5 - ogg codec</h3>
+				<p>The loop and poster attributes are not implemented yet in Firefox.</p>
+				<h2>With controls</h2>
+				<video src="video/320x240.ogg" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Autobuffer &amp; Controls</h2>
+				<video src="video/320x240.ogg" autobuffer="true" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Autoplay</h2>
+				<video src="video/320x240.ogg" autoplay="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Width and height</h2>
+				<p>I thought video might be resized here but it isn't.</p>
+				<video src="video/320x240.ogg" width="360" height="240" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+			</div>
+			<div id="safari">
+				<h3>Safari - h.264 codec</h3>
+				<h2>With controls</h2>
+				<video src="video/320x240.m4v" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Autobuffer &amp; Controls</h2>
+				<video src="video/320x240.m4v" autobuffer="true" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Poster</h2>
+				<p>Fails Safari 3.2.3 and Webkit Nightly on OSX 10.5.7. Brief flash then disappears.</p>
+				<video src="video/320x240.m4v" poster="images/posters/les.jpg" controls="true" width="320" height="240">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Autoplay</h2>
+				<video src="video/320x240.m4v" autoplay="true" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Width and height</h2>
+				<p>I thought video might be resized here but it isn't.</p>
+				<video src="video/320x240.m4v" width="360" height="240" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+				<h2>Loop</h2>
+				<p>Fails for me in Safari 3.2.3 on OSX 10.5.7 but fine in Webkit Nightly.</p>
+				<video src="video/320x240.m4v" loop="true" controls="true">
+					Your browser doesn't support the video tag. You can <a href="http://shapeshed.com/video/your_video.ogg">download the video here.</a>
+				</video>
+			</div>
+
+
+		</div>
+	    
+	</div>
+
+
+
